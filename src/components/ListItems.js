@@ -8,7 +8,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json;charset=utf-8";
 axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 
 const ListItems = () => {
-  const [cat, setCat] = useState([]);
+  const [cat, setCat] = useState([{name:"All",id:-1, products:[]}]);
   const [activeTab, setActiveTab] = useState([]);
 
   useEffect(() => {
@@ -16,11 +16,9 @@ const ListItems = () => {
       const res = await axios
         .get("http://localhost:8080/categories/")
         .then((res) => res.data);
-      setCat(res);
-    }
-    fetchData();
+      setCat((res1)=>res1.concat(res))
+    }fetchData();
   }, []);
-
 
   const onTabClick = (products) => {
     setActiveTab(products);
@@ -36,10 +34,10 @@ const ListItems = () => {
               <h1>Categories</h1>
               <ul>
                 {cat
-                  .filter((el) => el.products.length > 0)
-                  .map((cat) => {
+                  
+                  .map((cat, id) => {
                     return (
-                      <li>
+                      <li key={id}>
                         <div
                           href={`#tabs-${cat.id}`}
                           onClick={() => onTabClick(cat.products)}
